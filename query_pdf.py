@@ -44,10 +44,8 @@ def processDB():
         response = chat.invoke(prompt)
         for doc, _score in results:
             mp[doc.metadata.get("source", None)].add(doc.metadata.get("page", None) + 1)
-        print(mp)
 
         sources = []
-
         for key, value in mp.items():
             sources.append(f'Source: {key}, Pages: {value} | ')
         formatted_response = f'\n\nResponse: {response.content}\n\n{" ".join(sources)}'
