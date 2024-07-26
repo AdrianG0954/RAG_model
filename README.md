@@ -2,6 +2,8 @@
 
 To use the RAG (Retrieval-Augmented Generation) model, you'll need Python and pip installed on your system. Follow the instructions below to set up your environment.
 
+Keep in mind you need Visual Studio's c++ build tools and your own API key for AI use.
+
 ## Installation
 
 1. **Install Python**: Ensure you have Python installed. You can download it from [python.org](https://www.python.org/).
@@ -11,7 +13,6 @@ To use the RAG (Retrieval-Augmented Generation) model, you'll need Python and pi
 3. **Install Required Python Modules**: Use pip to install the necessary modules. Run the following commands:
 
     ```bash
-    (keep in mind you need visual studio's c++ build tools and your own API key for AI use)
     pip install langchain-community
     pip install openai
     pip install langchain-chroma
