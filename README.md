@@ -8,6 +8,7 @@ To use the RAG (Retrieval-Augmented Generation) model, you'll need Python and pi
 
 2. **Install pip**: Pip is usually included with Python installations. If it's not installed, follow the instructions on [pip's official website](https://pip.pypa.io/en/stable/installation/).
 
+(keep in mind you need visual studio's c++ build tools, and your own API key)
 3. **Install Required Python Modules**: Use pip to install the necessary modules. Run the following commands:
 
     ```bash
