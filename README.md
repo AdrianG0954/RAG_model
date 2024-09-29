@@ -2,6 +2,8 @@
 
 To use the RAG (Retrieval-Augmented Generation) model, you'll need Python and pip installed on your system. Follow the instructions below to set up your environment.
 
+Keep in mind you need Visual Studio's c++ build tools and your own API key for AI use.
+
 ## Installation
 
 1. **Install Python**: Ensure you have Python installed. You can download it from [python.org](https://www.python.org/).
@@ -18,6 +20,7 @@ To use the RAG (Retrieval-Augmented Generation) model, you'll need Python and pi
     pip install chromadb
     pip install langchain-openai
     ```
+
 
 ## Usage
 
