@@ -1,5 +1,5 @@
 import argparse
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from dotenv import load_dotenv
@@ -41,16 +41,15 @@ def processDB():
             continue
         
         text = "\n\n---\n\n".join([doc.page_content for doc, _ in results])
-        print(text)
-        # prompt_template = ChatPromptTemplate.from_template(TEMPLATE)
-        # prompt = prompt_template.format(context=text, question=query_text)
+        prompt_template = ChatPromptTemplate.from_template(TEMPLATE)
+        prompt = prompt_template.format(context=text, question=query_text)
 
-        # chat = ChatOpenAI()
-        # response = chat.invoke(prompt)
-        # source = [doc.metadata.get("source", None) for doc, _score in results]
-        # formatted_response = f'\n\nResponse: {response.content}\n\nSources:{set(source)}'
+        chat = ChatOpenAI()
+        response = chat.invoke(prompt)
+        source = [doc.metadata.get("source", None) for doc, _score in results]
+        formatted_response = f'\n\nResponse: {response.content}\n\nSources:{set(source)}'
 
-        #print(formatted_response)
+        print(formatted_response)
     
 
 if __name__ == "__main__":

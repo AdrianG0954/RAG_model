@@ -1,12 +1,14 @@
 from langchain_community.document_loaders import DirectoryLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.schema import Document
-from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
+from langchain_openai import OpenAIEmbeddings
+from langchain.schema import Document
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+
 import openai 
 from dotenv import load_dotenv
 import os
 import shutil
+
 
 load_dotenv()
 openai.api_key = os.environ['OPENAI_API_KEY']
@@ -21,7 +23,7 @@ def main():
 
 
 def load_documents():
-    loader = DirectoryLoader(DATA_PATH, glob="*.md")
+    loader = DirectoryLoader(DATA_PATH, glob="*.md", show_progress=True)
     documents = loader.load()
     return documents
 

@@ -1,4 +1,3 @@
-import argparse
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
@@ -32,7 +31,7 @@ def processDB():
         embedding_func = OpenAIEmbeddings()
         db = Chroma(persist_directory=CHROMA_PATH, embedding_function=embedding_func)
 
-        results = db.similarity_search_with_score(query_text, k=5)
+        results = db.similarity_search_with_score(query_text, k=7)
 
         
         text = "\n\n---\n\n".join([doc.page_content for doc, _ in results])
@@ -51,7 +50,12 @@ def processDB():
         formatted_response = f'\n\nResponse: {response.content}\n\n{" ".join(sources)}'
 
         print(formatted_response)
+
+
     
 
 if __name__ == "__main__":
     processDB()
+
+
+    
