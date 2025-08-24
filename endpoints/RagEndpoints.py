@@ -4,7 +4,7 @@ from RAG_Model.RAG_model.model_logic.query import langGraph_chat
 import os
 
 app = FastAPI()
-DIRECTORY = "data/pdfs"
+DIRECTORY = "../data/pdfs"
 
 # post a message to the LLM and recieve a response
 @app.post("/chat")
