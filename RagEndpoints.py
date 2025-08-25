@@ -32,7 +32,7 @@ async def list_pdfs():
 async def fetch_pdf(pdfName: str):
     pdfPath = os.path.join(DIRECTORY, pdfName)
     if not os.path.exists(pdfPath):
-        raise HTTPException(status_code=400, detail=f"File {pdfName} does not exist.")
+        raise HTTPException(status_code=404, detail="File not found.")
     return FileResponse(pdfPath, status_code=200, media_type='application/pdf', filename=pdfName)
 
 
