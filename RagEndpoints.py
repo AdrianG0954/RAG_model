@@ -104,7 +104,13 @@ async def remove_all_documents_endpoint():
             remove_document(pdfPath)
             os.remove(pdfPath)
         except Exception as e:
-            errors.append(f"Error removing {filename}: {str(e)}") 
+        if filename.endswith('.pdf'):
+            try:
+                pdfPath = os.path.join(DIRECTORY, filename)
+                remove_document(pdfPath)
+                os.remove(pdfPath)
+            except Exception as e:
+                errors.append(f"Error removing {filename}: {str(e)}") 
     
     if errors:
         return JSONResponse(content={"errors": errors}, status_code=207)
