@@ -97,7 +97,7 @@ def remove_document(source: str) -> None:
     db = Chroma(
         persist_directory=CHROMA_PATH,
         embedding_function=embedding_func,
-    )
+    db = get_db_connection()
 
     current_entries = db.get(include=["metadatas"])
     toDelete = []
