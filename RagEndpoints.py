@@ -100,11 +100,6 @@ async def remove_document_endpoint(pdfName: str):
 async def remove_all_documents_endpoint():
     errors = []
     for filename in os.listdir(DIRECTORY):
-        try:
-            pdfPath = os.path.join(DIRECTORY, filename)
-            remove_document(pdfPath)
-            os.remove(pdfPath)
-        except Exception as e:
         if filename.endswith('.pdf'):
             try:
                 pdfPath = os.path.join(DIRECTORY, filename)

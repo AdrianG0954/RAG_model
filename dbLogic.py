@@ -16,6 +16,16 @@ load_dotenv()
 openai.api_key = os.environ['OPENAI_API_KEY']
 CHROMA_PATH = 'chromaPDF'
 
+def get_chroma_db() -> Chroma:
+    """
+    Returns a Chroma database connection.
+    """
+    embedding_func = OpenAIEmbeddings()
+    return Chroma(
+        persist_directory=CHROMA_PATH,
+        embedding_function=embedding_func,
+    )
+
 def load_document(file_path: str) -> List[Document]:
     """
     Loads a PDF file and returns a list of Document objects.
@@ -63,12 +73,7 @@ def save_to_chromaDB(chunks: List[Document]) -> None:
     """
     Saves chunks to the Chroma vector database, avoiding duplicates.
     """
-    embedding_func = OpenAIEmbeddings()
-    db = Chroma(
-        persist_directory=CHROMA_PATH,
-        embedding_function=embedding_func,
     db = get_chroma_db()
-
     chunks_with_ids = generate_chunk_ids(chunks)
     current_entries = db.get(include=[])
     current_db_ids = set(current_entries['ids'])
@@ -93,11 +98,7 @@ def remove_document(source: str) -> None:
     """
     Removes all chunks from the DB with the given source.
     """
-    embedding_func = OpenAIEmbeddings()
-    db = Chroma(
-        persist_directory=CHROMA_PATH,
-        embedding_function=embedding_func,
-    db = get_db_connection()
+    db = get_chroma_db()
 
     current_entries = db.get(include=["metadatas"])
     toDelete = []
