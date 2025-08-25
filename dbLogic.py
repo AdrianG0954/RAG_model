@@ -67,7 +67,7 @@ def save_to_chromaDB(chunks: List[Document]) -> None:
     db = Chroma(
         persist_directory=CHROMA_PATH,
         embedding_function=embedding_func,
-    )
+    db = get_chroma_db()
 
     chunks_with_ids = generate_chunk_ids(chunks)
     current_entries = db.get(include=[])
