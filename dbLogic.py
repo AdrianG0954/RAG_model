@@ -14,7 +14,14 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 # Load environment variables and set OpenAI API key
 load_dotenv()
 openai.api_key = os.environ['OPENAI_API_KEY']
-CHROMA_PATH = '../chromaPDF'
+CHROMA_PATH = 'chromaPDF'
+
+# create db globally for easy reusability
+embedding_func = OpenAIEmbeddings()
+db = Chroma(
+    persist_directory=CHROMA_PATH,
+    embedding_function=embedding_func,
+)
 
 def load_document(file_path: str) -> List[Document]:
     """
@@ -38,6 +45,7 @@ def split_documents(documents: List[Document], chunk_size: int = 1000, chunk_ove
 def generate_chunk_ids(chunks: List[Document]) -> List[Document]:
     """
     Assigns unique IDs to each chunk based on source and page.
+    source example is: data/pdfs/test.pdf
     """
     res = []
     section = 1
@@ -62,11 +70,6 @@ def save_to_chromaDB(chunks: List[Document]) -> None:
     """
     Saves chunks to the Chroma vector database, avoiding duplicates.
     """
-    db = Chroma(
-        persist_directory=CHROMA_PATH, 
-        embedding_function=OpenAIEmbeddings(),
-    )
-
     chunks_with_ids = generate_chunk_ids(chunks)
     current_entries = db.get(include=[])
     current_db_ids = set(current_entries['ids'])
@@ -91,19 +94,14 @@ def remove_document(source: str) -> None:
     """
     Removes all chunks from the DB with the given source.
     """
-    db = Chroma(
-        persist_directory=CHROMA_PATH,
-        embedding_function=OpenAIEmbeddings(),
-    )
+    current_entries = db.get(include=["metadatas"])
+    toDelete = []
+    for i, metadata in enumerate(current_entries["metadatas"]):
+        if metadata.get("source") == source:
+            toDelete.append(current_entries['ids'][i])
 
-    current_entries = db.get(include=["metadatas", "ids"])
-    to_delete = []
-    for meta, doc_id in zip(current_entries["metadatas"], current_entries["ids"]):
-        if meta.get("source") == source:
-            to_delete.append(doc_id)
-
-    if to_delete:
-        db.delete(to_delete)
+    if toDelete:
+        db.delete(toDelete)
 
 def destroy_db() -> None:
     """
@@ -122,7 +120,4 @@ def save_document_to_db(file_path: str) -> None:
     documents = load_document(file_path)
     chunks = split_documents(documents)
     save_to_chromaDB(chunks)
-
-if __name__ == "__main__":
-    # Example usage
-   save_document_to_db("../data/pdfs/operating_systems_three_easy_pieces.pdf")
+    

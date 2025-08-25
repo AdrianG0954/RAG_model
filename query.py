@@ -76,7 +76,7 @@ Sources:
 ---
 
 Now, answer the following question using only the context. Do not mention the context in your response unless explicitly asked.
-Make sure to cite your sources. Don't be afraid to ask for clarification if needed.
+Make sure to cite your sources. Don't be afraid to ask for clarification if needed. Also, you may refer to the conversation history if it helps answer the query.
 
 Question:
 {question}
@@ -105,7 +105,7 @@ def build_context(results):
     return "\n\n---\n\n".join([doc.page_content for doc, _ in results])
 
 
-def langGraph_chat(user_query: str, thread_id: str = "1"):
+def langGraph_chat(user_query: str, thread_id: str = "test"):
     """
     Handles a chat turn using LangGraph and InMemorySaver for memory.
     Each thread_id gets its own conversation history.
@@ -118,8 +118,19 @@ def langGraph_chat(user_query: str, thread_id: str = "1"):
 
     return compiled_graph.get_state(config).values['messages'][-1].text()
 
-if __name__ == "__main__":
-    # Example usage
-    user_query = "What is it about?"
-    thread_id = "user123"  # Unique identifier for the conversation thread
-    print(langGraph_chat(user_query, thread_id))
+def retrieve_conversation(thread_id: str = "test") -> list[dict]:
+    """
+    Retrieves the full conversation history for a specific thread id,
+    formatted as a list of dicts for JSON response.
+    """
+    config: RunnableConfig = {"configurable": {"thread_id": thread_id}}
+    state = compiled_graph.get_state(config).values.get("messages", [])
+
+    res = []
+    for message in state:
+        if isinstance(message, HumanMessage):
+            res.append({"role": "user", "content": message.text()})
+        else:
+            res.append({"role": "ai", "content": message.text()})
+
+    return res
