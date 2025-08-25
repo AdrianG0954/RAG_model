@@ -23,7 +23,8 @@ async def get_conversation(thread_id: str = "test"):
 async def list_pdfs():
     pdf_files = []
     for file in os.listdir(DIRECTORY):
-        pdf_files.append(file)
+        if file.lower().endswith('.pdf'):
+            pdf_files.append(file)
 
     return JSONResponse(content={"pdfs": pdf_files}, status_code=200)
 
