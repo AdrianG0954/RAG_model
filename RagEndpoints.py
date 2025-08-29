@@ -34,13 +34,16 @@ async def fetch_pdf(pdfName: str):
     pdfPath = os.path.join(DIRECTORY, pdfName)
     if not os.path.exists(pdfPath):
         raise HTTPException(status_code=404, detail="File not found.")
+    
     # Prevent path traversal by resolving absolute paths and checking containment
     base_dir = os.path.abspath(DIRECTORY)
     requested_path = os.path.abspath(os.path.join(base_dir, pdfName))
     if not requested_path.startswith(base_dir + os.sep):
         raise HTTPException(status_code=400, detail="Invalid file path.")
+    
     if not os.path.exists(requested_path):
         raise HTTPException(status_code=400, detail=f"File {pdfName} does not exist.")
+    
     return FileResponse(requested_path, status_code=200, media_type='application/pdf', filename=pdfName)
 
 
@@ -64,17 +67,13 @@ async def add_document_endpoint(files: list[UploadFile] = File(...)):
 
             completePath = os.path.join(DIRECTORY, file.filename)
             if os.path.exists(completePath):
-                continue  # Skip existing files to avoid overwriting
-
+                continue
         
-            # write the file to the directory
             try:
                 with open(completePath, 'wb') as f:
                     # read the file in chunks to reduce memory usage
                     while contents := file.file.read(1024 * 1024):
                         f.write(contents)
-
-                # convert the pdf into a document and save this to the DB
                 save_document_to_db(completePath)
             except Exception as e:
                 # remove the file if added upon error
