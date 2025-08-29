@@ -40,10 +40,7 @@ async def fetch_pdf(pdfName: str):
     requested_path = os.path.abspath(os.path.join(base_dir, pdfName))
     if os.path.commonpath([base_dir, requested_path]) != base_dir:
         raise HTTPException(status_code=400, detail="Invalid file path.")
-    
-    
-    
-    
+     
     return FileResponse(requested_path, status_code=200, media_type='application/pdf', filename=pdfName)
 
 
