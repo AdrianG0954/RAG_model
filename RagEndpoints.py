@@ -41,8 +41,8 @@ async def fetch_pdf(pdfName: str):
     if not requested_path.startswith(base_dir + os.sep):
         raise HTTPException(status_code=400, detail="Invalid file path.")
     
-    if not os.path.exists(requested_path):
-        raise HTTPException(status_code=400, detail=f"File {pdfName} does not exist.")
+    
+    
     
     return FileResponse(requested_path, status_code=200, media_type='application/pdf', filename=pdfName)
 
