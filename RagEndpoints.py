@@ -38,7 +38,7 @@ async def fetch_pdf(pdfName: str):
     # Prevent path traversal by resolving absolute paths and checking containment
     base_dir = os.path.abspath(DIRECTORY)
     requested_path = os.path.abspath(os.path.join(base_dir, pdfName))
-    if not requested_path.startswith(base_dir + os.sep):
+    if os.path.commonpath([base_dir, requested_path]) != base_dir:
         raise HTTPException(status_code=400, detail="Invalid file path.")
     
     
