@@ -98,11 +98,15 @@ def save_to_chromaDB(chunks: List[Document], externalDb=None) -> None:
             source=documents_to_add_source
         )
 
-def remove_document(source: str) -> None:
+def remove_document(source: str, externalDb=None) -> None:
     """
     Removes all chunks from the DB with the given source.
     """
-    db = get_chroma_db()
+    # add for testing purposes
+    if externalDb:
+        db = externalDb
+    else:
+        db = get_chroma_db()
 
     current_entries = db.get(include=["metadatas"])
     toDelete = []
@@ -113,12 +117,16 @@ def remove_document(source: str) -> None:
     if toDelete:
         db.delete(toDelete)
 
-def clearDb() -> None:
+def clearDb(externalDb=None) -> None:
     """
     Clears all chunks from the Chroma DB.
     TODO: needs testing
     """
-    db = get_chroma_db()
+    if externalDb:
+        db = externalDb
+    else:
+        db = get_chroma_db()
+        
     currentEntries = db.get(include=[])
     db.delete(currentEntries.get('ids', []))
 
