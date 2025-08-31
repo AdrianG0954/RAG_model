@@ -27,14 +27,13 @@ def call_model(state: MessagesState):
     query = state["messages"][-1].text()
     results = db.similarity_search_with_score(query, k=5)
 
-    sources = format_sources(results)
+    _ = format_sources(results)
     context = build_context(results)
 
     prompt_template = ChatPromptTemplate.from_template(TEMPLATE)
     prompt = prompt_template.format(
         context=context,
         question=query,
-        sources=sources
     )
     # add the context to the invocation 
     response = llm.invoke(state["messages"] + [HumanMessage(prompt)])
@@ -63,20 +62,14 @@ Instructions:
 - If the question is vague, ask for a more specific clarification.
 - If the context does not provide any relevant information, tell the user to ask a more specific question.
 - Only answer if you are absolutely sure you are correct. Otherwise, specify that you are unsure and provide reasoning.
-- At the end of your response include a section for the sources you used in this format: 
-    Sources: 
-        - <source>, Page(s): <page_numbers>
 
 Context:
 {context}
 
-Sources:
-{sources}
-
 ---
 
-Now, answer the following question using only the context. Do not mention the context in your response unless explicitly asked.
-Make sure to cite your sources. Don't be afraid to ask for clarification if needed. Also, you may refer to the conversation history if it helps answer the query.
+Now, answer the following question using only the context. Do not mention the context in your response unless explicitly asked. 
+Don't be afraid to ask for clarification if needed.
 
 Question:
 {question}

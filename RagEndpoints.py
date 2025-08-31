@@ -1,5 +1,6 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse, Response, FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 from query import langGraph_chat, retrieve_conversation
 from dbLogic import save_document_to_db, remove_document
 from pydantic import BaseModel
@@ -7,6 +8,14 @@ import os
 
 app = FastAPI()
 DIRECTORY = "data/pdfs"
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class ChatRequest(BaseModel):
     message: str
