@@ -109,15 +109,14 @@ def remove_document(source: str) -> None:
     if toDelete:
         db.delete(toDelete)
 
-def destroy_db() -> None:
+def clearDb() -> None:
     """
-    Deletes the entire Chroma database directory.
+    Clears all chunks from the Chroma DB.
+    TODO: needs testing
     """
-    if os.path.exists(CHROMA_PATH):
-        shutil.rmtree(CHROMA_PATH)
-        print("Chroma DB destroyed.")
-    else:
-        print("Chroma DB does not exist.")
+    db = get_chroma_db()
+    currentEntries = db.get(include=[])
+    db.delete(currentEntries.get('ids', []))
 
 def save_document_to_db(file_path: str) -> None:
     """

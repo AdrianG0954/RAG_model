@@ -2,7 +2,7 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse, Response, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from query import langGraph_chat, retrieve_conversation
-from dbLogic import save_document_to_db, remove_document
+from dbLogic import save_document_to_db, remove_document, clearDb
 from pydantic import BaseModel
 import os
 
@@ -109,18 +109,9 @@ async def remove_document_endpoint(pdfName: str):
 
 # Removes all documents 
 @app.delete("/remove/pdfs")
-async def remove_all_documents_endpoint():
-    errors = []
-    for filename in os.listdir(DIRECTORY):
-        if filename.endswith('.pdf'):
-            try:
-                pdfPath = os.path.join(DIRECTORY, filename)
-                remove_document(pdfPath)
-                os.remove(pdfPath)
-            except Exception as e:
-                errors.append(f"Error removing {filename}: {str(e)}") 
-    
-    if errors:
-        return JSONResponse(content={"errors": errors}, status_code=207)
-
+async def remove_all():
+    try:
+        clearDb()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error removing all PDFs: {str(e)}")
     return Response(status_code=200)
