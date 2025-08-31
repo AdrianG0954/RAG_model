@@ -69,11 +69,15 @@ def generate_chunk_ids(chunks: List[Document]) -> List[Document]:
         res.append(c)
     return res
 
-def save_to_chromaDB(chunks: List[Document]) -> None:
+def save_to_chromaDB(chunks: List[Document], externalDb=None) -> None:
     """
     Saves chunks to the Chroma vector database, avoiding duplicates.
     """
-    db = get_chroma_db()
+    if externalDb:
+        db = externalDb
+    else:
+        db = get_chroma_db()
+
     chunks_with_ids = generate_chunk_ids(chunks)
     current_entries = db.get(include=[])
     current_db_ids = set(current_entries['ids'])

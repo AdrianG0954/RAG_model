@@ -65,12 +65,13 @@ async def chat_endpoint(message: ChatRequest):
 
 # pdf to be uploaded 
 @app.post("/upload/pdf")
-async def add_document_endpoint(files: list[UploadFile] = File(...)):
+async def upload_pdf(files: list[UploadFile] = File(...)):
     try:
         for file in files:
             if file.filename is None or not file.filename.lower().endswith('.pdf'):
                 raise HTTPException(status_code=400, detail="Invalid file type. Please upload a PDF file.")
 
+            # if the file already exists we skip
             completePath = os.path.join(DIRECTORY, file.filename)
             if os.path.exists(completePath):
                 continue
